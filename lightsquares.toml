@@ -1,0 +1,11 @@
+[source]
+head = "main"
+shallow = true
+
+[build]
+path = "Dockerfile"
+build_cmd = "./build.sh"
+artifacts = [
+  "dist/bzImage",
+]
+
