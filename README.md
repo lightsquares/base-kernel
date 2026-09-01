@@ -1,6 +1,6 @@
 # Base kernel
 
-[![Light Squares Attestable Builds](https://app.lightsquares.dev/api/badge/lightsquares/base-ovmf.svg)](https://app.lightsquares.dev/builds/dashboard?show=lightsquares/base-ovmf)
+[![Light Squares Attestable Builds](https://app.lightsquares.dev/api/badge/lightsquares/base-kernel.svg)](https://app.lightsquares.dev/builds/dashboard?show=lightsquares/base-kernel)
 
 Builds the pinned Linux guest kernel used by the confidential VM base image.
 The source commit, Debian snapshot/compiler image, Kbuild metadata and config
