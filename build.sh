@@ -24,6 +24,13 @@ trap '[ "$cleanup_source" -eq 0 ] || rm -rf "$SOURCE_DIR"' EXIT HUP INT TERM
 
 test "$(git -C "$SOURCE_DIR" rev-parse HEAD)" = "$LINUX_COMMIT"
 
+# Linux 6.16's early SEV conversion BUGs when PAT has no write-protected entry.
+# Apply the upstream fix while keeping the upstream source commit pinned.
+patch="$REPOSITORY_DIR/patches/early-sev-no-pat-wp.patch"
+if ! git -C "$SOURCE_DIR" apply --reverse --check "$patch" 2>/dev/null; then
+    git -C "$SOURCE_DIR" apply "$patch"
+fi
+
 rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR" "$REPOSITORY_DIR/dist"
 

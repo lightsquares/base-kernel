@@ -7,8 +7,9 @@ The source commit, Debian snapshot/compiler image, Kbuild metadata and config
 inputs are pinned for reproducibility.
 
 Kernel source comes from Linus Torvalds' official upstream repository on
-kernel.org. The pinned commit is the Linux 6.16 release; no AMD fork or
-out-of-tree guest patches are required.
+kernel.org. The pinned commit is the Linux 6.16 release. The build applies
+`patches/early-sev-no-pat-wp.patch`, based on the [upstream x86 patch](https://lists.openwall.net/linux-kernel/2026/10/20/1187),
+so SEV guests can boot when the PAT has no write-protected entry.
 
 Configuration starts from `allnoconfig` and applies two small contracts:
 
