@@ -1,0 +1,33 @@
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -28,6 +28,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/processor-flags.h>
+ #include <asm/msr.h>
++#include <asm/memtype.h>
+ #include <asm/cmdline.h>
+ #include <asm/sev.h>
+ #include <asm/ia32.h>
+@@ -109,8 +110,17 @@ static void __init __sme_early_enc_dec(resource_size_t paddr,
+ 		/*
+ 		 * Create mappings for the current and desired format of
+-		 * the memory. Use a write-protected mapping for the source.
++		 * the memory. Use a write-protected mapping for the source
++		 * if the PAT has a WP entry, else a write-back mapping. The
++		 * source is only read, so neither mapping creates modified
++		 * cache lines. Modified lines with the old attribute were
++		 * flushed before this call (see prepare_pte_enc()).
+ 		 */
+-		src = enc ? early_memremap_decrypted_wp(paddr, len) :
+-			    early_memremap_encrypted_wp(paddr, len);
++		if (x86_has_pat_wp()) {
++			src = enc ? early_memremap_decrypted_wp(paddr, len) :
++				    early_memremap_encrypted_wp(paddr, len);
++		} else {
++			src = enc ? early_memremap_decrypted(paddr, len) :
++				    early_memremap_encrypted(paddr, len);
++		}
+ 
+ 		dst = enc ? early_memremap_encrypted(paddr, len) :
+ 			    early_memremap_decrypted(paddr, len);
